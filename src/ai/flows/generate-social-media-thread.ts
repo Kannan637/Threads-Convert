@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { generateImageForPost } from './generate-image-for-post';
 
 const GenerateSocialMediaThreadInputSchema = z.object({
   text: z.string().describe('The text to generate a social media thread from.'),
@@ -30,8 +31,12 @@ export type GenerateSocialMediaThreadInput = z.infer<
 >;
 
 const GenerateSocialMediaThreadOutputSchema = z.object({
-  thread: z.array(z.string()).describe('The generated social media thread.'),
+  thread: z.array(z.object({
+    text: z.string().describe('The text of the post.'),
+    image: z.string().describe('A data URI for a generated image related to the post content.'),
+  })).describe('The generated social media thread, with each post having text and an image.'),
 });
+
 export type GenerateSocialMediaThreadOutput = z.infer<
   typeof GenerateSocialMediaThreadOutputSchema
 >;
@@ -45,7 +50,9 @@ export async function generateSocialMediaThread(
 const prompt = ai.definePrompt({
   name: 'generateSocialMediaThreadPrompt',
   input: {schema: GenerateSocialMediaThreadInputSchema},
-  output: {schema: GenerateSocialMediaThreadOutputSchema},
+  output: {schema: z.object({
+    thread: z.array(z.string()).describe('The generated social media thread as an array of strings.'),
+  })},
   prompt: `You are an expert social media content creator.
 
 You will generate a social media thread based on the provided text, platform, style, and preferred thread length.
@@ -76,7 +83,22 @@ const generateSocialMediaThreadFlow = ai.defineFlow(
     outputSchema: GenerateSocialMediaThreadOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const {output: textOutput} = await prompt(input);
+    if (!textOutput?.thread) {
+      throw new Error('Failed to generate thread text.');
+    }
+
+    const imagePromises = textOutput.thread.map(postText => 
+      generateImageForPost({ prompt: postText })
+    );
+
+    const imageResults = await Promise.all(imagePromises);
+
+    const finalThread = textOutput.thread.map((postText, index) => ({
+      text: postText,
+      image: imageResults[index].image,
+    }));
+    
+    return { thread: finalThread };
   }
 );

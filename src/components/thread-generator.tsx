@@ -11,8 +11,13 @@ import { generateCompellingHook } from '@/ai/flows/generate-compelling-hook';
 import { GeneratorForm } from '@/components/generator-form';
 import { ResultsPanel } from '@/components/results-panel';
 
+export type Post = {
+  text: string;
+  image: string;
+};
+
 export type GeneratedThread = {
-  thread: string[];
+  thread: Post[];
 };
 
 export type OptimizationSuggestions = {
