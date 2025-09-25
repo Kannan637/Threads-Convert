@@ -14,10 +14,12 @@ import { ResultsPanel } from '@/components/results-panel';
 export type Post = {
   text: string;
   image: string;
+  isPlaceholder?: boolean;
 };
 
 export type GeneratedThread = {
   thread: Post[];
+  usedPlaceholders?: boolean;
 };
 
 export type OptimizationSuggestions = {
@@ -75,7 +77,7 @@ export function ThreadGenerator() {
         if (threadResult.usedPlaceholders) {
           toast({
             title: "Image Generation Skipped",
-            description: "AI image generation requires a billed account. Using placeholder images instead.",
+            description: "AI image generation failed for one or more images. Using placeholder images instead.",
             duration: 5000,
           });
         }

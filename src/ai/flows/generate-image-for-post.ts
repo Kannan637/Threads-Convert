@@ -38,13 +38,16 @@ const generateImageForPostFlow = ai.defineFlow(
   async (input, streamingCallback) => {
     try {
       const {media} = await ai.generate({
-        model: 'googleai/imagen-4.0-fast-generate-001',
+        model: 'googleai/gemini-2.5-flash-image-preview',
         prompt: `Generate an image for a social media post with the following content: ${input.prompt}`,
         config: {
-          aspectRatio: '16:9',
+          responseModalities: ['TEXT', 'IMAGE'],
         },
       });
-      return {image: media.url!, isPlaceholder: false};
+      if (!media?.url) {
+        throw new Error('No image was generated.');
+      }
+      return {image: media.url, isPlaceholder: false};
     } catch (error) {
       console.warn('Image generation failed, using placeholder. Error:', error);
       const seed = Math.floor(Math.random() * 1000);
