@@ -39,7 +39,7 @@ const generateImageForPostFlow = ai.defineFlow(
     try {
       const {media} = await ai.generate({
         model: 'googleai/gemini-2.5-flash-image-preview',
-        prompt: input.prompt,
+        prompt: `Generate an image for a social media post with the following content: ${input.prompt}`,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
         },
