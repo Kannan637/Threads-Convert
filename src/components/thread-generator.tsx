@@ -8,6 +8,7 @@ import { ThreadGenerationSchema, type ThreadGenerationForm } from '@/lib/types';
 import { generateSocialMediaThread } from '@/ai/flows/generate-social-media-thread';
 import { suggestOptimalPostingTimes } from '@/ai/flows/suggest-optimal-posting-times';
 import { generateCompellingHook } from '@/ai/flows/generate-compelling-hook';
+import { generateTextFromVideoUrl } from '@/ai/flows/generate-text-from-video-url';
 import { GeneratorForm } from '@/components/generator-form';
 import { ResultsPanel } from '@/components/results-panel';
 
@@ -32,6 +33,7 @@ export type OptimizationSuggestions = {
 
 export function ThreadGenerator() {
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Generating your thread...');
   const [generatedThread, setGeneratedThread] = useState<GeneratedThread | null>(null);
   const [optimizations, setOptimizations] = useState<OptimizationSuggestions | null>(null);
   
@@ -40,7 +42,9 @@ export function ThreadGenerator() {
   const form = useForm<ThreadGenerationForm>({
     resolver: zodResolver(ThreadGenerationSchema),
     defaultValues: {
+      inputType: 'text',
       text: '',
+      url: '',
       platform: 'Twitter',
       style: 'Professional',
       threadLength: 7,
@@ -54,17 +58,34 @@ export function ThreadGenerator() {
     setOptimizations(null);
 
     try {
+      let content = data.text;
+      if (data.inputType === 'url' && data.url) {
+        setLoadingMessage('Extracting text from video...');
+        const textResult = await generateTextFromVideoUrl({ videoUrl: data.url });
+        if (!textResult.text) {
+          throw new Error('Failed to extract text from the video URL.');
+        }
+        content = textResult.text;
+        form.setValue('text', content);
+      }
+
+      if (!content) {
+        throw new Error('No content available for thread generation.');
+      }
+
+      setLoadingMessage('Generating thread and optimizations...');
+
       const threadPromise = generateSocialMediaThread({
-        text: data.text,
+        text: content,
         platform: data.platform,
         style: data.style,
         threadLength: data.threadLength,
       });
 
       const optimizationsPromises = Promise.all([
-        generateCompellingHook({ threadContent: data.text }),
+        generateCompellingHook({ threadContent: content }),
         suggestOptimalPostingTimes({ 
-          threadContent: data.text,
+          threadContent: content,
           platform: data.platform,
           targetAudience: data.targetAudience || 'a general audience',
         }),
@@ -107,6 +128,7 @@ export function ThreadGenerator() {
       });
     } finally {
       setIsLoading(false);
+      setLoadingMessage('Generating your thread...');
     }
   };
 
@@ -119,6 +141,7 @@ export function ThreadGenerator() {
           setGeneratedThread={setGeneratedThread}
           optimizations={optimizations}
           isLoading={isLoading}
+          loadingMessage={loadingMessage}
           platform={form.watch('platform')}
         />
       </div>

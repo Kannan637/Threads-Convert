@@ -12,10 +12,11 @@ interface ResultsPanelProps {
   setGeneratedThread: React.Dispatch<React.SetStateAction<GeneratedThread | null>>;
   optimizations: OptimizationSuggestions | null;
   isLoading: boolean;
+  loadingMessage: string;
   platform: 'Twitter' | 'LinkedIn';
 }
 
-export function ResultsPanel({ generatedThread, setGeneratedThread, optimizations, isLoading, platform }: ResultsPanelProps) {
+export function ResultsPanel({ generatedThread, setGeneratedThread, optimizations, isLoading, loadingMessage, platform }: ResultsPanelProps) {
   return (
     <Card className="sticky top-24">
       <Tabs defaultValue="preview">
@@ -36,7 +37,7 @@ export function ResultsPanel({ generatedThread, setGeneratedThread, optimization
             {isLoading && !generatedThread ? (
               <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Generating your thread...</p>
+                <p className="mt-4 text-muted-foreground">{loadingMessage}</p>
               </div>
             ) : generatedThread ? (
               <ThreadPreview generatedThread={generatedThread} setGeneratedThread={setGeneratedThread} platform={platform} />
