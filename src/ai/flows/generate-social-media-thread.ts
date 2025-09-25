@@ -68,14 +68,15 @@ Ensure each tweet/post is engaging and maintains narrative coherence.
 Add thread connectors where appropriate (e.g., \"In the next tweet...\").
 Create a compelling opening and closing tweet.
 
-Output the thread as a JSON array of strings.{
-  "safetySettings": [
-    {
-      "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-      "threshold": "BLOCK_ONLY_HIGH",
-    },
-  ],
-}`,
+Output the thread as a JSON array of strings.`,
+  config: {
+    safetySettings: [
+      {
+        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        threshold: 'BLOCK_ONLY_HIGH',
+      },
+    ],
+  }
 });
 
 const generateSocialMediaThreadFlow = ai.defineFlow(
