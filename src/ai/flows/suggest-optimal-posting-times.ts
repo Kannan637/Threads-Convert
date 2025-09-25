@@ -67,7 +67,15 @@ const suggestOptimalPostingTimesFlow = ai.defineFlow(
     outputSchema: SuggestOptimalPostingTimesOutputSchema,
   },
   async input => {
-    const {output} = await suggestOptimalPostingTimesPrompt(input);
-    return output!;
+    try {
+      const {output} = await suggestOptimalPostingTimesPrompt(input);
+      return output!;
+    } catch (error) {
+      console.error('Error suggesting optimal posting times:', error);
+      return {
+        suggestedPostTimes: [],
+        reasoning: "Could not generate posting time suggestions due to a temporary issue with the AI model. Please try again later."
+      };
+    }
   }
 );

@@ -61,7 +61,12 @@ const generateCompellingHookFlow = ai.defineFlow(
     outputSchema: GenerateCompellingHookOutputSchema,
   },
   async input => {
-    const {output} = await generateCompellingHookPrompt(input);
-    return output!;
+    try {
+      const {output} = await generateCompellingHookPrompt(input);
+      return output!;
+    } catch (error) {
+      console.error('Error generating compelling hook:', error);
+      return { hook: "💡 Here's a great thread for you!" };
+    }
   }
 );
