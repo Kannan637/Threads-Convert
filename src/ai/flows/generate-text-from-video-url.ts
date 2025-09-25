@@ -42,6 +42,7 @@ const generateTextFromVideoUrlFlow = ai.defineFlow(
     const mediaPart: MediaPart = {
       media: {
         url: input.videoUrl,
+        contentType: 'video/mp4'
       },
     };
 
