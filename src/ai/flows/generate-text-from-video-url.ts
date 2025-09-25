@@ -14,6 +14,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { MediaPart } from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 const GenerateTextFromVideoUrlInputSchema = z.object({
   videoUrl: z.string().url().describe('The URL of the video to process.'),
@@ -47,12 +48,8 @@ const generateTextFromVideoUrlFlow = ai.defineFlow(
     };
 
     const { text } = await ai.generate({
-      model: 'googleai/gemini-1.5-pro',
+      model: googleAI.model('gemini-1.5-pro', { location: 'us-central1' }),
       prompt: [mediaPart, {text: "Extract the spoken text from this video. Provide only the transcript."}],
-      config: {
-        // Gemini 1.5 is in preview and requires a region.
-        location: 'us-central1',
-      },
     });
 
     return { text: text };
