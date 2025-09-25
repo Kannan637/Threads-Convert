@@ -23,7 +23,7 @@ export function ResultsPanel({ generatedThread, setGeneratedThread, optimization
         <CardHeader>
           <div className='flex justify-between items-start'>
             <div>
-              <CardTitle className="font-headline">Results</CardTitle>
+              <CardTitle>Results</CardTitle>
               <CardDescription>Preview, edit, and optimize your new thread.</CardDescription>
             </div>
             <TabsList>
@@ -42,7 +42,7 @@ export function ResultsPanel({ generatedThread, setGeneratedThread, optimization
             ) : generatedThread ? (
               <ThreadPreview generatedThread={generatedThread} setGeneratedThread={setGeneratedThread} platform={platform} />
             ) : (
-              <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center p-8 border-2 border-dashed rounded-lg">
+              <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center p-8 border-2 border-dashed rounded-lg bg-card/50">
                 <Wand2 className="h-12 w-12 text-muted-foreground" />
                 <p className="mt-4 text-lg font-medium text-muted-foreground">Your generated thread will appear here.</p>
                 <p className="text-sm text-muted-foreground">Fill out the form and click "Generate Thread" to start.</p>
@@ -58,7 +58,7 @@ export function ResultsPanel({ generatedThread, setGeneratedThread, optimization
             ) : optimizations ? (
               <OptimizationSuggestionsComponent optimizations={optimizations} />
             ) : (
-              <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center p-8 border-2 border-dashed rounded-lg">
+              <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center p-8 border-2 border-dashed rounded-lg bg-card/50">
                 <Lightbulb className="h-12 w-12 text-muted-foreground" />
                 <p className="mt-4 text-lg font-medium text-muted-foreground">AI-powered suggestions will appear here.</p>
                 <p className="text-sm text-muted-foreground">Suggestions are generated along with your thread.</p>

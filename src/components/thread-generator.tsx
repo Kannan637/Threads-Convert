@@ -133,8 +133,8 @@ export function ThreadGenerator() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <GeneratorForm form={form} onSubmit={onSubmit} isLoading={isLoading} />
         <ResultsPanel 
           generatedThread={generatedThread}

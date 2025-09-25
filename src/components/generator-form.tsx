@@ -27,7 +27,7 @@ export function GeneratorForm({ form, onSubmit, isLoading }: GeneratorFormProps)
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline">Content Input</CardTitle>
+            <CardTitle>Content Input</CardTitle>
             <CardDescription>Paste your content or provide a URL to automatically generate a social media thread.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">

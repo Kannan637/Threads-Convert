@@ -3,9 +3,9 @@ import { ThreadGenerator } from '@/components/thread-generator';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="relative flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-1">
+      <main className="relative z-10 flex-1">
         <ThreadGenerator />
       </main>
     </div>

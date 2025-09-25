@@ -16,19 +16,19 @@ export function OptimizationSuggestions({ optimizations }: OptimizationSuggestio
     <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-headline">
+          <CardTitle className="flex items-center gap-2">
             <Lightbulb className="h-5 w-5 text-primary" />
             <span>Compelling Hook Suggestion</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="italic bg-muted p-4 rounded-md">"{hook}"</p>
+          <blockquote className="italic bg-muted p-4 rounded-md border-l-4 border-primary">"{hook}"</blockquote>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 font-headline">
+          <CardTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-primary" />
             <span>Optimal Posting Times</span>
           </CardTitle>
