@@ -135,7 +135,7 @@ export function GeneratorForm({ form, onSubmit, isLoading }: GeneratorFormProps)
                   <FormLabel>Thread Length: {threadLength} posts</FormLabel>
                   <FormControl>
                     <Slider
-                      min={5}
+                      min={1}
                       max={15}
                       step={1}
                       defaultValue={[field.value]}

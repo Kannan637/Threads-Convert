@@ -6,7 +6,7 @@ export const ThreadGenerationSchema = z.object({
   url: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   platform: z.enum(['Twitter', 'LinkedIn']),
   style: z.enum(['Professional', 'Casual', 'Storytelling', 'Educational']),
-  threadLength: z.coerce.number().min(5).max(15),
+  threadLength: z.coerce.number().min(1).max(15),
   targetAudience: z.string().min(3, {message: "Please describe your target audience."}).max(100, {message: "Description is too long."}).optional().or(z.literal('')),
 }).refine(data => {
   if (data.inputType === 'text') {

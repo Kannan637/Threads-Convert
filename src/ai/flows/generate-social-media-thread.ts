@@ -22,7 +22,7 @@ const GenerateSocialMediaThreadInputSchema = z.object({
     .describe('The style of the social media thread.'),
   threadLength: z
     .number()
-    .min(5)
+    .min(1)
     .max(15)
     .describe('The preferred length of the social media thread (number of tweets/posts).'),
 });
