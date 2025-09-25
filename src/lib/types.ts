@@ -3,7 +3,7 @@ import { z } from "zod";
 export const ThreadGenerationSchema = z.object({
   inputType: z.enum(['text', 'url']).default('text'),
   text: z.string().optional(),
-  url: z.string().url({ message: "Please enter a valid URL." }).optional(),
+  url: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   platform: z.enum(['Twitter', 'LinkedIn']),
   style: z.enum(['Professional', 'Casual', 'Storytelling', 'Educational']),
   threadLength: z.coerce.number().min(5).max(15),
@@ -12,10 +12,7 @@ export const ThreadGenerationSchema = z.object({
   if (data.inputType === 'text') {
     return !!data.text && data.text.length >= 50;
   }
-  if (data.inputType === 'url') {
-    return !!data.url;
-  }
-  return false;
+  return true;
 }, {
   message: "Content must be at least 50 characters long.",
   path: ['text'],
