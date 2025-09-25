@@ -19,6 +19,7 @@ export type GenerateImageForPostInput = z.infer<typeof GenerateImageForPostInput
 
 const GenerateImageForPostOutputSchema = z.object({
   image: z.string().describe('The generated image as a data URI.'),
+  isPlaceholder: z.boolean().optional().describe('Indicates if the image is a placeholder.'),
 });
 export type GenerateImageForPostOutput = z.infer<typeof GenerateImageForPostOutputSchema>;
 
@@ -34,14 +35,23 @@ const generateImageForPostFlow = ai.defineFlow(
     inputSchema: GenerateImageForPostInputSchema,
     outputSchema: GenerateImageForPostOutputSchema,
   },
-  async input => {
-    const {media} = await ai.generate({
-      model: 'googleai/imagen-4.0-fast-generate-001',
-      prompt: `Generate an image for a social media post with the following content: ${input.prompt}`,
-      config: {
-        aspectRatio: '16:9',
-      },
-    });
-    return {image: media.url!};
+  async (input, streamingCallback) => {
+    try {
+      const {media} = await ai.generate({
+        model: 'googleai/imagen-4.0-fast-generate-001',
+        prompt: `Generate an image for a social media post with the following content: ${input.prompt}`,
+        config: {
+          aspectRatio: '16:9',
+        },
+      });
+      return {image: media.url!, isPlaceholder: false};
+    } catch (error) {
+      console.warn('Image generation failed, using placeholder. Error:', error);
+      const seed = Math.floor(Math.random() * 1000);
+      return {
+        image: `https://picsum.photos/seed/${seed}/600/400`,
+        isPlaceholder: true,
+      };
+    }
   }
 );

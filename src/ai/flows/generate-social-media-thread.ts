@@ -35,6 +35,7 @@ const GenerateSocialMediaThreadOutputSchema = z.object({
     text: z.string().describe('The text of the post.'),
     image: z.string().describe('A data URI for a generated image related to the post content.'),
   })).describe('The generated social media thread, with each post having text and an image.'),
+  usedPlaceholders: z.boolean().optional().describe('Indicates if placeholder images were used.'),
 });
 
 export type GenerateSocialMediaThreadOutput = z.infer<
@@ -94,11 +95,17 @@ const generateSocialMediaThreadFlow = ai.defineFlow(
 
     const imageResults = await Promise.all(imagePromises);
 
-    const finalThread = textOutput.thread.map((postText, index) => ({
-      text: postText,
-      image: imageResults[index].image,
-    }));
+    let usedPlaceholders = false;
+    const finalThread = textOutput.thread.map((postText, index) => {
+      if (imageResults[index].isPlaceholder) {
+        usedPlaceholders = true;
+      }
+      return {
+        text: postText,
+        image: imageResults[index].image,
+      }
+    });
     
-    return { thread: finalThread };
+    return { thread: finalThread, usedPlaceholders };
   }
 );

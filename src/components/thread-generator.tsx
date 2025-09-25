@@ -72,6 +72,13 @@ export function ThreadGenerator() {
       
       if (threadResult && threadResult.thread.length > 0) {
         setGeneratedThread(threadResult);
+        if (threadResult.usedPlaceholders) {
+          toast({
+            title: "Image Generation Skipped",
+            description: "AI image generation requires a billed account. Using placeholder images instead.",
+            duration: 5000,
+          });
+        }
       } else {
         throw new Error('Failed to generate a valid thread. The AI may have returned an empty result.');
       }
