@@ -91,24 +91,20 @@ const generateSocialMediaThreadFlow = ai.defineFlow(
       throw new Error('Failed to generate thread text.');
     }
 
-    const imagePromises = textOutput.thread.map(postText => 
-      generateImageForPost({ prompt: postText })
-    );
-
-    const imageResults = await Promise.all(imagePromises);
-
+    const finalThread = [];
     let usedPlaceholders = false;
-    const finalThread = textOutput.thread.map((postText, index) => {
-      const imageResult = imageResults[index];
+
+    for (const postText of textOutput.thread) {
+      const imageResult = await generateImageForPost({ prompt: postText });
       if (imageResult.isPlaceholder) {
         usedPlaceholders = true;
       }
-      return {
+      finalThread.push({
         text: postText,
         image: imageResult.image,
         isPlaceholder: imageResult.isPlaceholder,
-      }
-    });
+      });
+    }
     
     return { thread: finalThread, usedPlaceholders };
   }
