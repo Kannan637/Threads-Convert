@@ -48,7 +48,7 @@ const generateTextFromVideoUrlFlow = ai.defineFlow(
     };
 
     const { text } = await ai.generate({
-      model: googleAI.model('gemini-1.5-pro', { location: 'us-central1' }),
+      model: googleAI.model('gemini-1.5-pro'),
       prompt: [mediaPart, {text: "Extract the spoken text from this video. Provide only the transcript."}],
     });
 
